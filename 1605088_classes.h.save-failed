@@ -76,8 +76,6 @@ class Ray{
     Vector3D dir;
 
 public:
-
-    Ray(){};
     Ray(Vector3D a,Vector3D b)
     {
         start.setX(a.getX());
@@ -131,11 +129,6 @@ class Light{
             color[2] = c[2];
         }
 
-        double* getColor()
-        {
-            return color;
-        }
-
         void draw()
         {
             glColor3f(color[0],color[1],color[2]);
@@ -143,11 +136,6 @@ class Light{
             glVertex3f(light_pos.getX(), light_pos.getY(), light_pos.getZ());
             glEnd();
 
-        }
-
-        Vector3D getLightPosition()
-        {
-            return light_pos;
         }
 };
 
@@ -184,11 +172,6 @@ class Light{
         void setShine(int s){
             shine = s;
         };
-
-        int getShine()
-        {
-            return shine;
-        }
         void setCoEfficients(double co[4]){
             coEfficients[0] = co[0];
             coEfficients[1] = co[1];
@@ -317,34 +300,8 @@ public:
         vector<Light*>::iterator iter,end;
         for(iter = lights.begin(), end = lights.end() ; iter != end; ++iter)
         {
-            Vector3D v((*iter)->getLightPosition().getX()-intersection_point.getX(),(*iter)->getLightPosition().getY()-intersection_point.getY(),(*iter)->getLightPosition().getZ()-intersection_point.getZ());
-            Ray ray1((*iter)->getLightPosition(), v);
-            double t = findtMin(getReference_point(),getLength(),&ray1);
-            if(t>0)
-                break;
-            double lambertValue = getCoefficients()[1] * (ray1.getStart().getX()*normal.getX()+ray1.getStart().getY()*normal.getY()+ray1.getStart().getZ()*normal.getZ());
-            //find reflected ray Rayr for Ray1
-            double dotResult = (ray1.getDir().getX()*normal.getX())+ (ray1.getDir().getY()*normal.getY()) + (ray1.getDir().getZ()*normal.getZ());
-            Ray rayr;
-            Vector3D v1 = new Vector3D(intersection_point.getX(),intersection_point.getY(),intersection_point.getZ());
-            rayr.setStart(v1);
-            Vector3D p;
-            p.setX((2*dotResult*normal.getX())-ray1.getDir().getX());
-            p.setY((2*dotResult*normal.getY())-ray1.getDir().getY());
-            p.setX((2*dotResult*normal.getZ())-ray1.getDir().getZ());
-            rayr.setDir(new Vector3D(intersection_point.getX()-p.getX(),intersection_point.getY()-p.getY(),intersection_point.getZ()-p.getZ()));
-            Ray view;
-            view.setStart(new Vector3D(position.x,position.y,position.z));
-            view.setDir(new Vector3D(position.x-intersection_point.getX(),position.y-intersection_point.getY(),position.z-intersection_point.getZ()));
-            doubole phoneValue = (view.getDir().getX()*rayr.getDir().getX() + view.getDir().getY()*rayr.getDir().getY() + view.getDir().getZ()*rayr.getDir().getZ());
-            color[0] = color[0]+ (*iter)->getColor()[0]*getCoefficients()[1]*lambertValue*getColor()[0];
-            color[1] = color[1]+ (*iter)->getColor()[1]*getCoefficients()[1]*lambertValue*getColor()[1];
-            color[2] = color[2]+ (*iter)->getColor()[2]*getCoefficients()[1]*lambertValue*getColor()[2];
 
-            color[0] = color[0]+ (*iter)->getColor()[0]*getCoefficients()[2]*  pow(phongValue,getShine())*getColor()[0];
-            color[1] = color[1]+ (*iter)->getColor()[1]*getCoefficients()[2]*  pow(phongValue,getShine())*getColor()[1];
-            color[2] = color[2]+ (*iter)->getColor()[2]*getCoefficients()[2]*  pow(phongValue,getShine())*getColor()[2];
-            }
+        }
 }
 
 
@@ -370,7 +327,7 @@ void capture()
     topLeft.y = topLeft.y + r.y*(0.5*du)-u.y*(0.5*dv);
     topLeft.z = topLeft.z + r.z*(0.5*du)-u.z*(0.5*dv);
     int nearest;
-    double t=999999,tMin;
+    double t,tMin;
     for(int i=1;i<=500;i++)
     {
         for(int j=1;j<=500;j++)
@@ -383,26 +340,11 @@ void capture()
             Vector3D eye(position.x,position.y,position.z);
             Ray ray(eye,current_pixel);
             double* col = new double[3];
-            vector<Object*>::iterator iter,end;
-            Object* nearest_object;
-            for(iter = objects.begin(), end = objects.end() ; iter != end; ++iter)
-            {
-                double* dummyColor = new double[3];
-                double temp =(*iter)->intersect(&ray,dummyColor,0);
-                if(temp>0 && temp<t)
-                    {
-                        t = temp;
-                        nearest_object = *iter;
-                    }
-            }
 
-            tMin = nearest_object->intersect(&ray,col,1);
-            image.set_pixel(i,j,col[0],col[1],col[2]);
+
+        }
 
     }
-    }
-    image.save_image("out.bmp");
-
 }
 
 };

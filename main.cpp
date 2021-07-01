@@ -45,18 +45,13 @@ double cameraAngle;
 int drawgrid;
 int drawaxes;
 
-
 vector<Object*> objects;
 vector<Light*> lights;
 
 
+
+
 double translateY;
-
-struct point
-{
-	double x, y, z;
-};
-
 
 struct point position, u, r, l;
 
@@ -67,7 +62,7 @@ void drawAxes()
 	if (drawaxes == 1)
 	{
 
-		glColor3f(1.0, 1.0, 1.0);
+		glColor3f(0.0, 1.0, 0.0);
 		glBegin(GL_LINES); {
 			glVertex3f(100, 0, 0);
 			glVertex3f(-100, 0, 0);
@@ -356,9 +351,14 @@ void display() {
 	drawAxes();
 
     vector<Object*>::iterator iter, end;
+    vector<Light*>::iterator iter1,end1;
 	 for(iter = objects.begin(), end = objects.end() ; iter != end; ++iter)
      {
             (*iter)->draw();
+     }
+     for(iter1 = lights.begin(), end1 = lights.end() ; iter1 != end1; ++iter1)
+     {
+         (*iter1)->draw();
      }
 
 
@@ -401,7 +401,7 @@ void init() {
 	l.z = 0;
 	translateY = 0;
 
-
+    drawaxes = 1;
 
 
 
@@ -510,7 +510,6 @@ void loadData()
             }
             else{
                 int noOfLight=0;
-                cout<<tp<<endl;
                 stringstream g(tp);
                 g>>noOfLight;
                 double d,f,h;
@@ -518,7 +517,6 @@ void loadData()
                 {
                     inputfile>>a>>b>>c;
                     inputfile>>d>>f>>h;
-
                     Vector3D point(a,b,c);
                     double c[3] = {d,f,h};
                     Light *temp;
