@@ -127,6 +127,9 @@ void drawCircle(double radius, int segments)
 
 void keyboardListener(unsigned char key, int x, int y) {
 	switch (key) {
+	    case '0':
+	        capture();
+	        break;
 	case '1':
 	{
 		double c = cos((10.0f * 3.1416) / 180);
@@ -355,13 +358,12 @@ void display() {
 	 for(iter = objects.begin(), end = objects.end() ; iter != end; ++iter)
      {
             (*iter)->draw();
+
      }
      for(iter1 = lights.begin(), end1 = lights.end() ; iter1 != end1; ++iter1)
      {
          (*iter1)->draw();
      }
-
-
 
 
 
@@ -381,10 +383,11 @@ void animate() {
 
 void init() {
 	//codes for initialization
-	position.x = 100;
-	position.y = 90;
-	position.z = 20;
 
+
+	position.x = 129.699;
+	position.y = 150.811;
+	position.z = 116;
 	cameraHeight = 150.0;
 	cameraAngle = 1.0;
 
@@ -542,8 +545,6 @@ int main(int argc, char** argv) {
 
 
 	loadData();
-
-
 
 
 	glEnable(GL_DEPTH_TEST);	//enable Depth Testing
